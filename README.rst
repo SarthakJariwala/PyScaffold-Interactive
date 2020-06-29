@@ -5,6 +5,8 @@ PyScaffold-Interactive
 
 Interactive PyScaffold - An interactive Python project template generator based on PyScaffold
 
+.. image:: demo/pyscaffold_interactive.gif
+
 
 Description
 ===========
