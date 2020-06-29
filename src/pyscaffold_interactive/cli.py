@@ -20,11 +20,10 @@ import sys
 import logging
 
 import click
-from pyscaffold import templates
+from pyscaffold import templates, info
 from pyscaffold.api import create_project
-from pyscaffold.extenstions.tox import Tox
-from pyscaffold.extenstions.travis import Travis
-from pyscaffold.extenstions.namespace import Namespace
+from pyscaffold.extensions.tox import Tox
+from pyscaffold.extensions.travis import Travis
 
 from pyscaffold_interactive import __version__
 
@@ -41,24 +40,34 @@ def main():
   """Interactive Python project template setup
   """
 
+  click.echo(
+    click.style(f"\nPyScaffold-Interactive - A tool to interactively "+
+    "create python project templates using PyScaffold\n", 
+    fg="green")
+  )
+
   project_name = click.prompt(
     click.style("Enter your project name ", fg="blue"),
     default="PyProject"
   )
 
-  package_name = click.prompt(
-    click.style("Enter your package name ", fg="blue"),
-    default=f"{project_name}"
+  author = click.prompt(
+    click.style("Package author name ", fg="blue"),
+    default=info.username()
+  )
+
+  email = click.prompt(
+    click.style("Author email", fg="blue"),
+    default=info.email()
   )
 
   description = click.prompt(
     click.style("Enter your package description ", fg="blue"),
-    default="PyScaffold-Interactive is an interactive tool to easily\n"+
-    "put up the scaffold of a Python project."
+    default="Generated using PyScaffold and PyScaffold-Interactive"
   )
 
   license = click.prompt(
-    click.style("Choose License", fg="blue"),
+    click.style("Choose License\n", fg="blue"),
     show_choices=True,
     type=click.Choice(license_choices, case_sensitive=True),
     default='mit'
@@ -86,12 +95,24 @@ def main():
 
   create_project(
     project=project_name,
-    description=description,
     license=license,
-    extensions=extensions
+    extensions=extensions,
+    opts={
+      "description":f"{description}",
+      "author":f"{author}",
+      "email":f"{email}"
+    }
   )
 
+  click.echo(
+    click.style(f"\nSuccess! {project_name} created. Lets code!", fg="green")
+  )
 
+  click.echo(
+    click.style("\nAfter making changes you can update using - ", 
+    fg="green") + 
+    click.style(f"'putup {project_name} --update'", fg='red')
+  )
 
 
 def run():
