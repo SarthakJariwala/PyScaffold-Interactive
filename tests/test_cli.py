@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 
+import shutil, os
 import pytest
 import click
 from click.testing import CliRunner
-import sys
-# sys.path.append("src/")
 from pyscaffold_interactive import cli as pysci #import main, prompt_text, prompt_choice
 
 __author__ = "Sarthak Jariwala"
@@ -55,4 +54,6 @@ def test_main(runner):
     input="PyProject\nSarthak Jariwala\njariwala@uw.edu\nwww.example.com\nMy description\nmit\ny\ny\n"
     result = runner.invoke(cli, input=input)
     assert not result.exception
-    assert result.exit_code == 0 # TODO get this test to pass
+    assert result.exit_code == 0
+
+    shutil.rmtree(os.path.join(os.getcwd(), "PyProject"))
