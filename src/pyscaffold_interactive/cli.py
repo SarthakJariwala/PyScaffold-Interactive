@@ -1,23 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-This is a skeleton file that can serve as a starting point for a Python
-console script. To run this script uncomment the following lines in the
-[options.entry_points] section in setup.cfg:
-
-    console_scripts =
-         fibonacci = pyscaffold_interactive.skeleton:run
-
-Then run `python setup.py install` which will install the command `fibonacci`
-inside your current environment.
-Besides console scripts, the header (i.e. until _logger...) of this file can
-also be used as template for Python modules.
-
-Note: This skeleton file can be safely removed if not needed!
+Interactively generate a Python project template with customizations
+using PyScaffold
 """
 
 import argparse
 import sys
 import logging
+from collections.abc import Iterable
 
 import click
 from pyscaffold import templates, info
@@ -33,12 +23,35 @@ __license__ = "mit"
 
 _logger = logging.getLogger(__name__)
 
-license_choices = templates.licenses.keys()
-extensions = []
+
+def prompt_text(text, default=None):
+  """Prompt user text input
+  """
+  prompt_ans = click.prompt(click.style(text, fg="blue"), default=default)
+  return prompt_ans
+
+
+def prompt_choice(text, choices, default=None):
+  """Prompt user input from provided choices
+  """
+  # choices must be iterable
+  assert isinstance(choices, Iterable)
+
+  prompt_ans = click.prompt(
+    click.style(text, fg="blue"),
+    show_choices=True,
+    type=click.Choice(choices, case_sensitive=False),
+    default=default)
+  
+  return prompt_ans
+
 
 def main():
-  """Interactive Python project template setup
+  """Interactive Python project template setup using PyScaffold
   """
+
+  license_choices = templates.licenses.keys()
+  extensions = []
 
   click.echo(
     click.style(f"\nPyScaffold-Interactive - A tool to interactively "+
@@ -46,52 +59,32 @@ def main():
     fg="green")
   )
 
-  project_name = click.prompt(
-    click.style("Enter your project name ", fg="blue"),
-    default="PyProject"
-  )
+  project_name = prompt_text("Enter your project name ",default="PyProject")
 
-  author = click.prompt(
-    click.style("Package author name ", fg="blue"),
-    default=info.username()
-  )
+  author = prompt_text("Package author name ", default=info.username())
 
-  email = click.prompt(
-    click.style("Author email", fg="blue"),
-    default=info.email()
-  )
+  email = prompt_text("Author email", default=info.email())
 
-  description = click.prompt(
-    click.style("Enter your package description ", fg="blue"),
-    default="Generated using PyScaffold and PyScaffold-Interactive"
-  )
+  url = prompt_text("Project URL", 
+  default="https://github.com/SarthakJariwala/PyScaffold-Interactive")
 
-  license = click.prompt(
-    click.style("Choose License\n", fg="blue"),
-    show_choices=True,
-    type=click.Choice(license_choices, case_sensitive=True),
-    default='mit'
-  )
+  description = prompt_text(
+    "Enter package description\n",
+    default="Generated using PyScaffold and PyScaffold-Interactive")
 
-  make_tox = click.prompt(
-    click.style("Generate config files for automated testing using tox? ", fg='blue'),
-    show_choices=True,
-    type=click.Choice(['y','n'], case_sensitive=False),
-    default='y'
-  ).lower()
+  license = prompt_choice("Choose License\n", license_choices, default='mit').lower()
 
-  if make_tox == 'y':
-    extensions.append(Tox('tox'))
+  make_tox = prompt_choice(
+    "Generate config files for automated testing using tox? ",
+    ['y','n'], default='y').lower()
 
-  create_travis = click.prompt(
-    click.style("Generate config and script files for Travis CI.? ", fg='blue'),
-    show_choices=True,
-    type=click.Choice(['y','n'], case_sensitive=False),
-    default='y'
-  ).lower()
+  if make_tox == 'y': extensions.append(Tox('tox'))
 
-  if create_travis == 'y':
-    extensions.append(Travis('travis'))
+  create_travis = prompt_choice(
+    "Generate config and script files for Travis CI.? ",
+    ['y','n'], default='y').lower()
+
+  if create_travis == 'y': extensions.append(Travis('travis'))
 
   create_project(
     project=project_name,
@@ -100,7 +93,8 @@ def main():
     opts={
       "description":f"{description}",
       "author":f"{author}",
-      "email":f"{email}"
+      "email":f"{email}",
+      "url":f"{url}"
     }
   )
 
