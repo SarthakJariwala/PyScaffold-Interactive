@@ -103,9 +103,9 @@ def main():
   )
 
   click.echo(
-    click.style("\nAfter making changes you can update using - ", 
+    click.style("\nAll putup commands are also available. For help - ", 
     fg="green") + 
-    click.style(f"'putup {project_name} --update'", fg='red')
+    click.style("'putup --help'", fg='red')
   )
 
 
