@@ -2,7 +2,9 @@
 PyScaffold-Interactive
 ======================
 .. image:: https://travis-ci.org/SarthakJariwala/PyScaffold-Interactive.svg?branch=master
-    :target: https://travis-ci.org/SarthakJariwala/PyScaffold-Interactive
+    :target: https://travis-ci.org/SarthakJariwala/PyScaffold-Interactive 
+.. image:: https://badge.fury.io/py/PyScaffold-Interactive.svg
+    :target: https://badge.fury.io/py/PyScaffold-Interactive
 
 Interactive PyScaffold - An interactive Python project template generator based on PyScaffold
 
