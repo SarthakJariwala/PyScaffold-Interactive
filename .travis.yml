@@ -12,7 +12,7 @@ before_script:
   - git config --global user.email "jariwala@uw.edu"
   - git config --global user.name "Sarthak Jariwala"
 script:
-  - python setup.py develop
+  # - python setup.py develop
   - tox
   - |
     if [[ "$COVERAGE" == "true" ]]; then
