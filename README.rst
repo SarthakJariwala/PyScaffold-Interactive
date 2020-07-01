@@ -6,7 +6,7 @@ PyScaffold-Interactive
 .. image:: https://badge.fury.io/py/PyScaffold-Interactive.svg
     :target: https://badge.fury.io/py/PyScaffold-Interactive
 .. image:: https://coveralls.io/repos/github/SarthakJariwala/PyScaffold-Interactive/badge.svg?branch=master
-:target: https://coveralls.io/github/SarthakJariwala/PyScaffold-Interactive?branch=master
+    :target: https://coveralls.io/github/SarthakJariwala/PyScaffold-Interactive?branch=master
 
 An interactive Python project template generator based on `PyScaffold <https://pyscaffold.org/en/latest/>`_
 
