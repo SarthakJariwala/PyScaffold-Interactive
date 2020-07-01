@@ -13,7 +13,7 @@ Interactive PyScaffold - An interactive Python project template generator based 
 Installation
 ============
 
-``pip install pyscaffold_interactive``
+``pip install pyscaffold-interactive``
 
 Usage
 ==========
