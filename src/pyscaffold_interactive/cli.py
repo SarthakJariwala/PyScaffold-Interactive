@@ -39,7 +39,8 @@ def prompt_choice(text, choices, default=None):
         click.style(text, fg="blue"),
         show_choices=True,
         type=click.Choice(choices, case_sensitive=False),
-        default=default)
+        default=default,
+    )
 
     return prompt_ans
 
@@ -52,9 +53,11 @@ def main():
     extensions = []
 
     click.echo(
-        click.style("\nPyScaffold-Interactive - A tool to interactively " +
-                    "create python project templates using PyScaffold\n",
-                    fg="green")
+        click.style(
+            "\nPyScaffold-Interactive - A tool to interactively "
+            + "create python project templates using PyScaffold\n",
+            fg="green",
+        )
     )
 
     project_name = prompt_text("Enter your project name ", default="PyProject")
@@ -65,30 +68,31 @@ def main():
 
     url = prompt_text(
         "Project URL",
-        default="https://github.com/SarthakJariwala/PyScaffold-Interactive")
+        default="https://github.com/SarthakJariwala/PyScaffold-Interactive",
+    )
 
     description = prompt_text(
         "Enter package description\n",
-        default="Generated using PyScaffold and PyScaffold-Interactive")
+        default="Generated using PyScaffold and PyScaffold-Interactive",
+    )
 
-    license = prompt_choice(
-        "Choose License\n",
-        license_choices,
-        default='mit').lower()
+    license = prompt_choice("Choose License\n", license_choices, default="mit").lower()
 
     make_tox = prompt_choice(
         "Generate config files for automated testing using tox? ",
-        ['y', 'n'], default='y').lower()
+        ["y", "n"],
+        default="y",
+    ).lower()
 
-    if make_tox == 'y':
-        extensions.append(Tox('tox'))
+    if make_tox == "y":
+        extensions.append(Tox("tox"))
 
     create_travis = prompt_choice(
-        "Generate config and script files for Travis CI.? ",
-        ['y', 'n'], default='y').lower()
+        "Generate config and script files for Travis CI.? ", ["y", "n"], default="y"
+    ).lower()
 
-    if create_travis == 'y':
-        extensions.append(Travis('travis'))
+    if create_travis == "y":
+        extensions.append(Travis("travis"))
 
     create_project(
         project=project_name,
@@ -98,19 +102,17 @@ def main():
             "description": f"{description}",
             "author": f"{author}",
             "email": f"{email}",
-            "url": f"{url}"
-        }
+            "url": f"{url}",
+        },
     )
 
     click.echo(
-        click.style(
-            f"\nSuccess! {project_name} created. Lets code!",
-            fg="green"))
+        click.style(f"\nSuccess! {project_name} created. Lets code!", fg="green")
+    )
 
     click.echo(
-        click.style("\nAll putup commands are also available. For help - ",
-                    fg="green") +
-        click.style("'putup --help'", fg='red')
+        click.style("\nAll putup commands are also available. For help - ", fg="green")
+        + click.style("'putup --help'", fg="red")
     )
 
 
