@@ -5,11 +5,13 @@ using PyScaffold
 """
 
 import logging
+import subprocess
 from collections.abc import Iterable
 
 import click
 from pyscaffold import info, templates
 from pyscaffold.api import create_project
+from pyscaffold.extensions.pre_commit import PreCommit
 from pyscaffold.extensions.tox import Tox
 from pyscaffold.extensions.travis import Travis
 
@@ -45,8 +47,9 @@ def prompt_choice(text, choices, default=None):
     return prompt_ans
 
 
+@click.command()
 def main():
-    """Interactive Python project template setup using PyScaffold
+    """Interactive Python/DataScience project template setup using PyScaffold
     """
 
     license_choices = templates.licenses.keys()
@@ -78,6 +81,17 @@ def main():
 
     license = prompt_choice("Choose License\n", license_choices, default="mit").lower()
 
+    is_data_sci_proj = prompt_choice(
+        "Is this a DataScience project?", ["y", "n"], default="n"
+    ).lower()
+
+    if is_data_sci_proj == "y":
+        data_sci_cmds = str(
+            "putup '{}' --description '{}' --url '{}' --license '{}' --dsproject".format(
+                project_name, description, url, license
+            )
+        )
+
     make_tox = prompt_choice(
         "Generate config files for automated testing using tox? ",
         ["y", "n"],
@@ -85,29 +99,50 @@ def main():
     ).lower()
 
     if make_tox == "y":
-        extensions.append(Tox("tox"))
+        if is_data_sci_proj == "y":
+            data_sci_cmds += " --tox"
+        else:
+            extensions.append(Tox("tox"))
 
     create_travis = prompt_choice(
         "Generate config and script files for Travis CI.? ", ["y", "n"], default="y"
     ).lower()
 
     if create_travis == "y":
-        extensions.append(Travis("travis"))
+        if is_data_sci_proj == "y":
+            data_sci_cmds += " --travis"
+        else:
+            extensions.append(Travis("travis"))
 
-    create_project(
-        project=project_name,
-        license=license,
-        extensions=extensions,
-        opts={
-            "description": f"{description}",
-            "author": f"{author}",
-            "email": f"{email}",
-            "url": f"{url}",
-        },
-    )
+    # only ask for pre-commit if not datascience project, auto-yes for datasci project
+    if is_data_sci_proj == "n":
+        create_pre_commit = prompt_choice(
+            "Generate pre-commit config? [Recommended] ", ["y", "n"], default="y"
+        ).lower()
+
+        if create_pre_commit == "y":
+            extensions.append(PreCommit("pre-commit"))
+
+    if is_data_sci_proj == "y":
+        # setup datascience project using putup
+        subprocess.check_output(data_sci_cmds, shell=True)  # need to test on windows
+    else:
+        create_project(
+            project=project_name,
+            license=license,
+            extensions=extensions,
+            opts={
+                "description": "{}".format(description),
+                "author": "{}".format(author),
+                "email": "{}".format(email),
+                "url": "{}".format(url),
+            },
+        )
 
     click.echo(
-        click.style(f"\nSuccess! {project_name} created. Lets code!", fg="green")
+        click.style(
+            "\nSuccess! {} created. Lets code!".format(project_name), fg="green"
+        )
     )
 
     click.echo(

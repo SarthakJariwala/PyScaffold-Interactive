@@ -56,13 +56,28 @@ def test_choice_iterable():
 
 
 def test_main(runner):
-    """Test interactive creation of pyscaffold"""
+    """Test interactive creation of pyscaffold python project"""
 
     @click.command()
     def cli():
         return pysci.main()
 
-    input = "PyProject\nSarthak Jariwala\njariwala@uw.edu\nwww.example.com\nMy description\nmit\ny\ny\n"
+    input = "PyProject\nSarthak Jariwala\njariwala@uw.edu\nwww.example.com\nMy description\nmit\nn\ny\ny\ny\n"
+    result = runner.invoke(cli, input=input)
+    assert not result.exception
+    assert result.exit_code == 0
+
+    shutil.rmtree(os.path.join(os.getcwd(), "PyProject"))
+
+
+def test_main_dsproject(runner):
+    """Test interactive creation of pyscaffold datascience project"""
+
+    @click.command()
+    def cli():
+        return pysci.main()
+
+    input = "PyProject\nSarthak Jariwala\njariwala@uw.edu\nwww.example.com\nMy description\nmit\ny\ny\ny\n"
     result = runner.invoke(cli, input=input)
     assert not result.exception
     assert result.exit_code == 0
