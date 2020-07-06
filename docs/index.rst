@@ -27,6 +27,8 @@ Interactively create a python project template using PyScaffold
 - Choose from a selection of licenses
 - Configure automated testing using `tox <https://tox.readthedocs.io/en/latest/index.html>`_
 - Setup continuous integration using `Travis-CI <https://travis-ci.org/>`_
+- Option to add pre-commit file during project setup
+- Create DataScience projects interactively (using the same command)
 - In addition, you get all of PyScaffold's native commands! Just do ``putup --help``
 
 

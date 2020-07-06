@@ -2,10 +2,16 @@
 Changelog
 =========
 
+Version 0.2
+=============
+
+- Option to add pre-commit file during project setup
+- Create DataScience projects interactively (using the same command)
+
 Version 0.1.1
 =============
 
-- Setup a new python project interactively 
+- Setup a new python project interactively
 - Add details like project name, author name, email, url, description
 - Choose from a selection of licenses
 - Configure automated testing using `tox <https://tox.readthedocs.io/en/latest/index.html>`_
