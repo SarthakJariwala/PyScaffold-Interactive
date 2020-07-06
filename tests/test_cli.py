@@ -26,7 +26,7 @@ def test_default_vs_input(runner):
     @click.command()
     def cli():
         ans = pysci.prompt_text("Project name", default="PyProject")
-        click.echo(f"Project Name = {ans}")
+        click.echo("Project Name = {}".format(ans))
 
     result = runner.invoke(cli, input="My Python Project\n")
     assert not result.exception
