@@ -33,6 +33,7 @@
 
 language: python
 os: linux
+dist: xenial
 
 matrix:
   include:
@@ -40,7 +41,6 @@ matrix:
       env: NOXSESSION="tests-3.5"
     - python: "3.6"
       env: NOXSESSION="tests-3.6"
-      dist: xenial
     - python: "3.7"
       env: NOXSESSION="tests-3.7"
     # - os: windows
@@ -51,7 +51,8 @@ matrix:
     #     - choco install python --version $TRAVIS_PYTHON_VERSION
     #     - export PATH="/C/Python37:/C/Python37/Scripts:$PATH"
 install:
-  - pip install git+https://github.com/cs01/nox.git@5ea70723e9e6#egg=nox coveralls coverage
+  - pip install --upgrade pip setuptools
+  - pip install git+https://github.com/cs01/nox.git@5ea70723e9e6#egg=nox
 
 before_script:
   - git config --global user.email "jariwala@uw.edu"
