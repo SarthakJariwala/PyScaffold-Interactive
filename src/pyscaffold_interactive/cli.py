@@ -4,6 +4,7 @@ Interactively generate a Python project template with customizations
 using PyScaffold
 """
 
+import sys
 import logging
 import subprocess
 from collections.abc import Iterable
@@ -86,9 +87,13 @@ def main():
     ).lower()
 
     if is_data_sci_proj == "y":
+        if sys.platform == "win32":
+            PUTUP_CMD = 'putup.exe'
+        else:
+            PUTUP_CMD = 'putup'
         data_sci_cmds = str(
-            "putup '{}' --description '{}' --url '{}' --license '{}' --dsproject".format(
-                project_name, description, url, license
+            "{} '{}' --description '{}' --url '{}' --license '{}' --dsproject".format(
+                PUTUP_CMD, project_name, description, url, license
             )
         )
 
