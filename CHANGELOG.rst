@@ -2,7 +2,11 @@
 Changelog
 =========
 
-Version 0.2
+Version 0.2.2
+=============
+- BUGFIX DataScience project creation on windows
+
+Version 0.2.0
 =============
 
 - Option to add pre-commit file during project setup
