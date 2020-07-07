@@ -2,7 +2,7 @@
 Changelog
 =========
 
-Version 0.2.2
+Version 0.2.1
 =============
 - BUGFIX DataScience project creation on windows
 
