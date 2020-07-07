@@ -4,9 +4,10 @@ Interactively generate a Python project template with customizations
 using PyScaffold
 """
 
-import sys
 import logging
+import shutil
 import subprocess
+import sys
 from collections.abc import Iterable
 
 import click
@@ -88,14 +89,17 @@ def main():
 
     if is_data_sci_proj == "y":
         if sys.platform == "win32":
-            PUTUP_CMD = 'putup.exe'
+            data_sci_cmds = ["cmd", "/c", shutil.which("putup")]
         else:
-            PUTUP_CMD = 'putup'
-        data_sci_cmds = str(
-            "{} '{}' --description '{}' --url '{}' --license '{}' --dsproject".format(
-                PUTUP_CMD, project_name, description, url, license
-            )
-        )
+            data_sci_cmds = ["putup"]
+        data_sci_cmds.append("{}".format(project_name))
+        data_sci_cmds.append("--description")
+        data_sci_cmds.append("{}".format(description))
+        data_sci_cmds.append("--url")
+        data_sci_cmds.append("{}".format(url))
+        data_sci_cmds.append("--license")
+        data_sci_cmds.append("{}".format(license))
+        data_sci_cmds.append("--dsproject")
 
     make_tox = prompt_choice(
         "Generate config files for automated testing using tox? ",
@@ -105,7 +109,7 @@ def main():
 
     if make_tox == "y":
         if is_data_sci_proj == "y":
-            data_sci_cmds += " --tox"
+            data_sci_cmds.append("--tox")
         else:
             extensions.append(Tox("tox"))
 
@@ -115,7 +119,7 @@ def main():
 
     if create_travis == "y":
         if is_data_sci_proj == "y":
-            data_sci_cmds += " --travis"
+            data_sci_cmds.append("--travis")
         else:
             extensions.append(Travis("travis"))
 
@@ -130,7 +134,7 @@ def main():
 
     if is_data_sci_proj == "y":
         # setup datascience project using putup
-        subprocess.check_output(data_sci_cmds, shell=True)  # need to test on windows
+        subprocess.call(data_sci_cmds)  # need to test on windows
     else:
         create_project(
             project=project_name,
