@@ -134,7 +134,7 @@ def main():
 
     if is_data_sci_proj == "y":
         # setup datascience project using putup
-        subprocess.call(data_sci_cmds)  # need to test on windows
+        subprocess.call(data_sci_cmds)
     else:
         create_project(
             project=project_name,
