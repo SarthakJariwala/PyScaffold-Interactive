@@ -16,7 +16,14 @@ An interactive Python/DataScience project template generator based on `PyScaffol
 
 Installation
 ============
+Recommended (using pipx)
+------------------------
+``pipx install pyscaffold-interactive``
 
+Refer to `pipx documentation <https://pipxproject.github.io/pipx/>`_ for information on how to get pipx
+
+Alternatively (using pip)
+-------------------------
 ``pip install pyscaffold-interactive``
 
 Usage
@@ -27,7 +34,7 @@ As simple as :
 Description
 ===========
 
-Interactively create a python project template using PyScaffold
+Interactively create a python package or datascience project template using PyScaffold
 
 - Setup a new python project and interactively add details like project name, author name, email, url, description
 - Choose from a selection of licenses
@@ -36,10 +43,3 @@ Interactively create a python project template using PyScaffold
 - Option to add pre-commit file during project setup
 - Create DataScience projects interactively (using the same command)
 - In addition, you get all of PyScaffold's native commands! Just do ``putup --help``
-
-
-Note
-====
-
-This project has been set up using PyScaffold 3.2.3. For details and usage
-information on PyScaffold see https://pyscaffold.org/.
