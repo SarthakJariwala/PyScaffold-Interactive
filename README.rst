@@ -5,6 +5,9 @@ PyScaffold-Interactive
     :target: https://travis-ci.org/SarthakJariwala/PyScaffold-Interactive
 .. image:: https://badge.fury.io/py/PyScaffold-Interactive.svg
     :target: https://badge.fury.io/py/PyScaffold-Interactive
+.. image:: https://readthedocs.org/projects/pyscaffold-interactive/badge/?version=latest
+    :target: https://pyscaffold-interactive.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
 .. image:: https://coveralls.io/repos/github/SarthakJariwala/PyScaffold-Interactive/badge.svg?branch=master
     :target: https://coveralls.io/github/SarthakJariwala/PyScaffold-Interactive?branch=master
 .. image:: https://img.shields.io/badge/License-MIT-yellow.svg
