@@ -4,38 +4,26 @@ Interactively generate a Python project template with customizations
 using PyScaffold
 """
 
-import logging
+import click
 import shutil
 import subprocess
 import sys
 from collections.abc import Iterable
-
-import click
-from pyscaffold import info, templates
-from pyscaffold.api import create_project
-from pyscaffold.extensions.pre_commit import PreCommit
-from pyscaffold.extensions.tox import Tox
-from pyscaffold.extensions.travis import Travis
-
-# from pyscaffold_interactive import __version__
+from pyscaffold import templates
 
 __author__ = "Sarthak Jariwala"
 __copyright__ = "Sarthak Jariwala"
 __license__ = "mit"
 
-_logger = logging.getLogger(__name__)
-
 
 def prompt_text(text, default=None):
-    """Prompt user text input
-    """
+    """Prompt user text input"""
     prompt_ans = click.prompt(click.style(text, fg="blue"), default=default)
     return prompt_ans
 
 
 def prompt_choice(text, choices, default=None):
-    """Prompt user input from provided choices
-    """
+    """Prompt user input from provided choices"""
     # choices must be iterable
     assert isinstance(choices, Iterable)
 
@@ -51,11 +39,14 @@ def prompt_choice(text, choices, default=None):
 
 @click.command()
 def main():
-    """Interactive Python/DataScience project template setup using PyScaffold
-    """
+    """Interactive Python/DataScience project template setup using PyScaffold"""
 
     license_choices = templates.licenses.keys()
-    extensions = []
+
+    if sys.platform == "win32":
+        cmds = ["cmd", "/c", shutil.which("putup")]
+    else:
+        cmds = ["putup"]
 
     click.echo(
         click.style(
@@ -66,62 +57,37 @@ def main():
     )
 
     project_name = prompt_text("Enter your project name ", default="PyProject")
+    cmds.append(f"{project_name}")
 
-    author = prompt_text("Package author name ", default=info.username())
-
-    email = prompt_text("Author email", default=info.email())
+    description = prompt_text(
+        "Enter short description",
+        default="Generated using PyScaffold-Interactive",
+    )
+    cmds.append(f"-d {description}")
 
     url = prompt_text(
         "Project URL",
         default="https://github.com/SarthakJariwala/PyScaffold-Interactive",
     )
-
-    description = prompt_text(
-        "Enter package description\n",
-        default="Generated using PyScaffold and PyScaffold-Interactive",
-    )
-
-    license = prompt_choice("Choose License\n", license_choices, default="mit").lower()
+    cmds.append(f"-u {url}")
 
     is_data_sci_proj = prompt_choice(
         "Is this a DataScience project?", ["y", "n"], default="n"
     ).lower()
 
     if is_data_sci_proj == "y":
-        if sys.platform == "win32":
-            data_sci_cmds = ["cmd", "/c", shutil.which("putup")]
-        else:
-            data_sci_cmds = ["putup"]
-        data_sci_cmds.append("{}".format(project_name))
-        data_sci_cmds.append("--description")
-        data_sci_cmds.append("{}".format(description))
-        data_sci_cmds.append("--url")
-        data_sci_cmds.append("{}".format(url))
-        data_sci_cmds.append("--license")
-        data_sci_cmds.append("{}".format(license))
-        data_sci_cmds.append("--dsproject")
+        cmds.append("--dsproject")
 
-    make_tox = prompt_choice(
-        "Generate config files for automated testing using tox? ",
-        ["y", "n"],
-        default="y",
+    create_ci = prompt_choice(
+        "Do you want to use GitHub Actions or GitLab CI? ",
+        ["GitHub", "GitLab", "None"],
+        default="GitHub",
     ).lower()
 
-    if make_tox == "y":
-        if is_data_sci_proj == "y":
-            data_sci_cmds.append("--tox")
-        else:
-            extensions.append(Tox("tox"))
-
-    create_travis = prompt_choice(
-        "Generate config and script files for Travis CI.? ", ["y", "n"], default="y"
-    ).lower()
-
-    if create_travis == "y":
-        if is_data_sci_proj == "y":
-            data_sci_cmds.append("--travis")
-        else:
-            extensions.append(Travis("travis"))
+    if create_ci == "github":
+        cmds.append("--github")
+    elif create_ci == "gitlab":
+        cmds.append("--gitlab")
 
     # only ask for pre-commit if not datascience project, auto-yes for datasci project
     if is_data_sci_proj == "n":
@@ -130,39 +96,40 @@ def main():
         ).lower()
 
         if create_pre_commit == "y":
-            extensions.append(PreCommit("pre-commit"))
+            cmds.append("--pre-commit")
 
-    if is_data_sci_proj == "y":
-        # setup datascience project using putup
-        subprocess.call(data_sci_cmds)
-    else:
-        create_project(
-            project=project_name,
-            license=license,
-            extensions=extensions,
-            opts={
-                "description": "{}".format(description),
-                "author": "{}".format(author),
-                "email": "{}".format(email),
-                "url": "{}".format(url),
-            },
-        )
+    # only ask for markdown if not datascience project, auto-yes for datasci project
+    if is_data_sci_proj == "n":
+        create_markdown = prompt_choice(
+            "Use Markdown or Restructured Text for documentation?",
+            ["md", "rst"],
+            default="md",
+        ).lower()
+
+        if create_markdown == "md":
+            cmds.append("--markdown")
+
+    license = prompt_choice("Choose License", license_choices, default="mit").lower()
+    cmds.append(f"-l {license}")
+
+    click.echo(click.style("\nSetting up your project...", fg="green"))
+    # setup datascience project using putup
+    subprocess.call(cmds)
 
     click.echo(
-        click.style(
-            "\nSuccess! {} created. Lets code!".format(project_name), fg="green"
-        )
+        click.style(f"\nSuccess! {project_name} created. Lets code!", fg="green")
     )
 
     click.echo(
-        click.style("\nAll putup commands are also available. For help - ", fg="green")
-        + click.style("'putup --help'", fg="red")
+        click.style(
+            "\nAll pyscaffold commands are also available. For help - ", fg="green"
+        )
+        + click.style("'putup --help'", fg="blue")
     )
 
 
 def run():
-    """Entry point for console_scripts
-    """
+    """Entry point for console_scripts"""
     main()
 
 

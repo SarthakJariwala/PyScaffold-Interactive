@@ -7,4 +7,12 @@
     https://pytest.org/latest/plugins.html
 """
 
-# import pytest
+import pytest
+
+import subprocess
+
+
+@pytest.fixture()
+def delete_folder_after_test():
+    yield
+    subprocess.run(["rm", "-rf", "PyProject"])

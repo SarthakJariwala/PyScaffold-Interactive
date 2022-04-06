@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import os
-import shutil
-
 import pytest
 
 import click
@@ -55,31 +52,48 @@ def test_choice_iterable():
         pysci.prompt_choice("Confrim", 1)
 
 
-def test_main(runner):
+@pytest.mark.usefixtures("delete_folder_after_test")
+@pytest.mark.parametrize("ci", ["github", "gitlab", "None"])
+@pytest.mark.parametrize("pre_commit", ["y", "n"])
+@pytest.mark.parametrize("md_or_rst", ["md", "rst"])
+def test_main(runner, delete_folder_after_test, ci, pre_commit, md_or_rst):
     """Test interactive creation of pyscaffold python project"""
 
     @click.command()
     def cli():
         return pysci.main()
 
-    input = "PyProject\nSarthak Jariwala\njariwala@uw.edu\nwww.example.com\nMy description\nmit\nn\ny\ny\ny\n"
+    input = ""
+    input += "PyProject\n"  # project name
+    input += "My description\n"  # description
+    input += "www.example.com\n"  # url
+    input += "n\n"  # DS-porject? - yes/no
+    input += f"{ci}\n"  # github-actions CI
+    input += f"{pre_commit}\n"  # pre-commit
+    input += f"{md_or_rst}\n"  # markdown text
+    input += "mit\n"  # license
+
     result = runner.invoke(cli, input=input)
     assert not result.exception
     assert result.exit_code == 0
 
-    shutil.rmtree(os.path.join(os.getcwd(), "PyProject"))
 
-
-def test_main_dsproject(runner):
+@pytest.mark.usefixtures("delete_folder_after_test")
+@pytest.mark.parametrize("ci", ["github", "gitlab", "None"])
+def test_main_dsproject(runner, delete_folder_after_test, ci):
     """Test interactive creation of pyscaffold datascience project"""
 
     @click.command()
     def cli():
         return pysci.main()
 
-    input = "PyProject\nSarthak Jariwala\njariwala@uw.edu\nwww.example.com\nMy description\nmit\ny\ny\ny\n"
+    input = ""
+    input += "PyProject\n"  # project name
+    input += "My description\n"  # description
+    input += "www.example.com\n"  # url
+    input += "y\n"  # DS-porject? - yes/no
+    input += f"{ci}\n"  # github-actions CI
+    input += "mit\n"  # license
     result = runner.invoke(cli, input=input)
     assert not result.exception
     assert result.exit_code == 0
-
-    shutil.rmtree(os.path.join(os.getcwd(), "PyProject"))

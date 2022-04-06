@@ -1,15 +1,9 @@
-import os
-
 import nox
 
-travis_python_version = os.environ.get("TRAVIS_PYTHON_VERSION")
-if travis_python_version:
-    python = [travis_python_version]
-else:
-    python = ["3.6", "3.7"]
+nox.options.sessions = "tests"
 
 
-@nox.session(python=python)
+@nox.session
 def tests(session):
     """Run tests"""
     session.install("-e", ".", "pytest", "pytest-cov")
@@ -17,9 +11,9 @@ def tests(session):
 
 
 @nox.session
-def blacken(session):
+def black(session):
     """Run black code formatter"""
-    session.install("black==19.3b0", "isort==4.3.21")
-    files = ["src", "tests", "noxfile.py", "setup.py"]
+    session.install("black", "isort")
+    files = ["src", "tests", "noxfile.py"]
     session.run("black", *files)
     session.run("isort", "--recursive", *files)
