@@ -15,3 +15,11 @@ def black(session):
     files = ["src", "tests", "noxfile.py"]
     session.run("black", *files)
     session.run("isort", "--recursive", *files)
+
+
+@nox.session
+def coverage(session):
+    """Upload coverage data."""
+    session.install("coverage[toml]", "codecov")
+    session.run("coverage", "xml", "--fail-under=0")
+    session.run("codecov", *session.posargs)
