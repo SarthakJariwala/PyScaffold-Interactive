@@ -13,3 +13,6 @@ jobs:
     - run: pip install --constraint=.github/workflows/constraints.txt nox
     - run: pip install --constraint=.github/workflows/constraints.txt poetry
     - run: nox --sessions tests coverage
+    - run: curl -Os https://uploader.codecov.io/latest/linux/codecov
+    - run: chmod +x codecov
+    - run: ./codecov
