@@ -1,5 +1,7 @@
 import nox
 
+nox.options.sessions = ("tests",)
+
 
 @nox.session
 def tests(session):
