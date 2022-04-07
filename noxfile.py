@@ -4,7 +4,7 @@ import nox
 @nox.session
 def tests(session):
     """Run tests"""
-    session.install("-e", ".", "pytest", "pytest-cov")
+    session.install("-e", ".", "pytest", "pytest-cov", "coverage[toml]")
     session.run("pytest")
 
 
@@ -21,5 +21,5 @@ def black(session):
 def coverage(session):
     """Upload coverage data."""
     session.install("coverage[toml]", "codecov")
-    session.run("coverage", "xml", "--fail-under=0")
+    session.run("coverage", "xml")
     session.run("codecov", *session.posargs)
